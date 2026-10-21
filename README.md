@@ -4,7 +4,8 @@
 
 [下载 Windows x64 版](https://github.com/Apple-Blossom23/offline-text-compare/releases/latest) · [提交问题](https://github.com/Apple-Blossom23/offline-text-compare/issues) · [MIT License](LICENSE)
 
-![Text Compare WebView2 桌面版界面](docs/screenshot.jpg)
+<img width="1901" height="1140" alt="image" src="https://github.com/user-attachments/assets/7bfe84e2-c302-4b2e-a78c-9a587336105b" />
+
 
 适合快速核对提示词、JSON 配置、代码片段、日志和 Markdown 文档，粘贴两段文本即可查看差异。
 
