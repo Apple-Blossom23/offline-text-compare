@@ -1,0 +1,20 @@
+{
+  "name": "offline-text-compare",
+  "productName": "Text Compare",
+  "version": "1.1.0",
+  "description": "Lightweight offline text diff for Windows, powered by the system WebView2 runtime.",
+  "private": true,
+  "license": "MIT",
+  "author": "Apple-Blossom23",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Apple-Blossom23/offline-text-compare.git"
+  },
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test test/diff.test.cjs test/webview2-bridge.test.cjs",
+    "desktop": "powershell.exe -NoProfile -File webview2/start.ps1",
+    "desktop:package": "powershell.exe -NoProfile -File webview2/build.ps1"
+  }
+}

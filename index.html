@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' blob:; style-src 'unsafe-inline'; worker-src blob:; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Text Compare · 离线文本对比</title>
+<style>:root{font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;color:#242c3b;background:#f5f7fb;font-size:14px;color-scheme:light;--bg:#f5f7fb;--card:#fff;--soft:#f8fafc;--text:#242c3b;--muted:#8290a3;--border:#e5eaf1;--accent:#4867e8;--add:#edf9f1;--del:#fff0f1;--add-strong:#c1edd0;--del-strong:#fac8ce;--amber:#a76c12;--shadow:0 4px 24px #253e6c06}
+*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button,select,input[type=checkbox]{cursor:pointer}button{color:inherit}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:3px}button:disabled{opacity:.38;cursor:default}button{transition:background .15s,border-color .15s}button:hover:not(:disabled){border-color:#a2b2d3;background:var(--soft)}[hidden]{display:none!important}.topbar{height:88px;background:var(--card);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;padding:0 4.4%;gap:20px}.brand{display:flex;align-items:center;gap:13px}.brand-icon{width:44px;height:44px;background:var(--accent);border-radius:13px;color:white;display:grid;place-items:center;font-size:34px;font-weight:400}.brand h1{font-size:20px;letter-spacing:-.6px;margin:0 0 3px;font-weight:700}.brand p{margin:0;font-size:11px;color:var(--muted);letter-spacing:2px}.version{font-size:9px;color:#8a96a8;background:var(--soft);padding:5px 7px;border:1px solid var(--border);border-radius:4px;margin-left:9px;letter-spacing:1px}.top-actions{display:flex;align-items:center;gap:13px}.privacy{color:#6c7a8f;font-size:12px;margin-right:10px}.privacy i{display:inline-block;width:6px;height:6px;background:#3bae7a;border-radius:50%;margin-right:7px}.icon-button{width:31px;height:31px;border-radius:7px;border:1px solid var(--border);background:var(--card);font-size:17px}.top-actions .icon-button{border-color:transparent;background:var(--soft)}main{max-width:1800px;margin:auto;padding:35px 4.4% 0}.intro{display:flex;align-items:center;justify-content:space-between;margin-bottom:27px}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:600;color:#8995aa}.intro h2{font-size:28px;letter-spacing:-.8px;line-height:1.5;margin:7px 0}.intro h2 span{color:var(--accent)}.intro p{color:#8691a2;margin:0;font-size:13px}.button{border:1px solid var(--border);border-radius:7px;background:var(--card);padding:9px 13px;font-size:12px;white-space:nowrap;line-height:17px}.button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;box-shadow:0 3px 7px #4867e81a}.button.primary:hover{background:#3b58ce}.button.subtle{color:#5e6b84;background:transparent;padding:10px 15px}.button.subtle span{margin-left:15px;color:var(--accent)}kbd{font-family:inherit;font-size:10px;padding:2px 5px;background:#ffffff20;border-radius:3px;margin-left:14px;color:#dce4ff}.workspace,.results{border:1px solid var(--border);border-radius:12px;background:var(--card);box-shadow:var(--shadow);overflow:hidden}.toolbar{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--border);gap:12px;flex-wrap:wrap}.toolbar-left,.toolbar-right{display:flex;align-items:center;gap:8px}.toggle{display:flex;align-items:center;gap:7px;color:#66748a;font-size:12px;margin-right:8px}.toggle input{appearance:none;width:28px;height:16px;border-radius:15px;background:#bdc6d6;position:relative;margin:0}.toggle input:after{content:"";position:absolute;top:3px;left:3px;width:10px;height:10px;background:#fff;border-radius:50%;transition:left .15s}.toggle input:checked{background:var(--accent)}.toggle input:checked:after{left:15px}.editors{display:grid;grid-template-columns:1fr 1fr}.editor{min-width:0}.editor:first-child{border-right:1px solid var(--border)}.editor-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 17px}.editor-label{display:flex;align-items:center;gap:9px;min-width:0}.side-badge{font-size:10px;background:#edf0ff;color:#6680d8;border-radius:4px;padding:4px 6px;font-weight:700}.right-badge{background:#eaf6f1;color:#4d987d}.editor-label strong{font-size:12px;white-space:nowrap}.file-name{font-size:11px;color:#9aa4b4;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;max-width:150px}.editor-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}.text-button{border:0;padding:0;background:none;font-size:11px;color:#7e8aa0}.button.small{padding:4px 9px;font-size:11px}.input-wrap{position:relative;margin:0 16px}textarea{display:block;width:100%;height:236px;resize:vertical;min-height:130px;max-height:70vh;border:1px solid var(--border);border-radius:7px;background:var(--soft);color:var(--text);padding:14px 15px;font-family:Consolas,"Cascadia Code","Microsoft YaHei",monospace;font-size:12px;line-height:1.9;tab-size:4;white-space:pre;overflow:auto}textarea::placeholder{color:#a4aebe;font-family:inherit}.editor-foot{display:flex;justify-content:space-between;align-items:center;padding:10px 17px 15px;font-size:10px;color:#8b97a9}.editor-foot select{border:0;color:#7f8ca0;background:transparent;font-size:10px;max-width:130px}.drop-hint{display:none}.editor.drag .drop-hint{position:absolute;inset:0;background:#edf1fff0;border:2px dashed var(--accent);border-radius:8px;display:grid;place-items:center;color:var(--accent);pointer-events:none}.options{padding:13px 19px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:15px;color:#778399;font-size:11px;flex-wrap:wrap}.option-checks{display:flex;gap:21px;align-items:center;flex-wrap:wrap}.options-label{color:#a0a8b8;font-size:10px;margin-right:2px}.options label{display:flex;gap:6px;align-items:center;white-space:nowrap}.options input{accent-color:var(--accent);margin:0;width:12px;height:12px}.remember{color:#98a2b2}.results{margin-top:22px}.result-toolbar{display:flex;align-items:center;justify-content:space-between;padding:15px 19px;gap:10px}.result-title{display:flex;align-items:center;gap:13px;flex-wrap:wrap}.result-title h3{font-size:13px;margin:0}.result-title #summary{font-size:11px;color:var(--muted)}#stale{font-size:10px;color:var(--amber)}.navigation{display:flex;align-items:center;gap:6px}.navigation>span{font-family:Consolas,monospace;font-size:11px;color:var(--muted);margin-right:8px}.navigation .icon-button{width:27px;height:27px;font-size:15px}.result-meta{display:flex;justify-content:space-between;align-items:center;padding:0 19px 14px;font-size:10px;color:var(--muted)}.stat{padding:4px 7px;border-radius:4px;margin-right:7px;font-size:10px}.stat-modify{background:#fff7e8;color:#b0833e}.stat-insert{background:var(--add);color:#368263}.stat-delete{background:var(--del);color:#c36a77}.diff-titles{display:grid;grid-template-columns:1fr 1fr;background:var(--soft);border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:10px;color:#8190a6}.diff-titles span{padding:9px 16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.diff-titles span:first-child{border-right:1px solid var(--border)}.diff-titles b{font-weight:400;margin-left:10px}.diff-scroll{max-height:580px;overflow:auto;scroll-behavior:smooth;scrollbar-gutter:stable}.diff-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);font:12px/23px Consolas,"Cascadia Code","Microsoft YaHei",monospace;min-height:27px}.diff-cell{display:flex;min-width:0;position:relative;border-bottom:1px solid color-mix(in srgb,var(--border) 40%,transparent);padding:2px 0}.diff-cell:first-child{border-right:1px solid var(--border)}.line-number{user-select:none;flex:0 0 46px;text-align:right;padding:0 10px 0 3px;color:#acb5c3;font-size:10px;border-right:1px solid color-mix(in srgb,var(--border) 60%,transparent);align-self:stretch}.line-code{margin:0;padding:0 12px;white-space:pre-wrap;overflow-wrap:anywhere;min-width:0;tab-size:4;font:inherit;flex:1}.diff-cell.absent{background:repeating-linear-gradient(135deg,var(--soft),var(--soft) 4px,var(--border) 5px,var(--soft) 6px)}.diff-cell.deleted{background:var(--del)}.diff-cell.inserted{background:var(--add)}mark{color:inherit;background:transparent;border-radius:2px}.deleted mark{background:var(--del-strong)}.inserted mark{background:var(--add-strong)}.diff-row.selected{box-shadow:inset 3px 0 var(--accent)}.diff-row.selected .line-number{color:var(--accent);font-weight:700}.nowrap .line-code{white-space:pre;overflow-x:auto}.empty{text-align:center;padding:47px 20px 40px;border-top:1px solid var(--border)}.empty-icon{display:flex;justify-content:center;gap:5px;margin-bottom:18px;transform:rotate(-6deg)}.empty-icon span{display:grid;place-items:center;background:#f0f3fc;border:1px solid #e5eafa;border-radius:8px;width:34px;height:42px;color:#97a7d8;font-size:23px}.empty-icon span:last-child{margin-top:7px;background:#f0f8f4;color:#8dbdaa;border-color:#dfefe7}.empty h3{font-size:14px;font-weight:500;margin:0 0 9px}.empty p{font-size:11px;color:#9ba5b5;margin:0}.legend{display:flex;justify-content:center;gap:22px;font-size:10px;color:#9ba5b5;margin-top:24px}.legend span{display:flex;align-items:center;gap:6px}.dot{height:6px;width:6px;border-radius:2px}.red{background:#e8979e}.green{background:#74c4a0}.amber{background:#e6c181}footer{display:flex;justify-content:space-between;gap:14px;padding:21px 2px 26px;color:#9ea8b8;font-size:10px}footer i{font-style:normal;margin:0 12px}.notice{padding:10px 18px;font-size:11px;color:var(--amber);background:#fff8e8}.load-more{display:block;margin:14px auto}#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#253149;color:#fff;padding:12px 20px;border-radius:9px;box-shadow:0 4px 25px #0002;font-size:12px;z-index:10;max-width:90vw}dialog{color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:15px;width:590px;max-width:92vw;padding:25px;box-shadow:0 20px 80px #0003}dialog::backdrop{background:#17203866;backdrop-filter:blur(3px)}.dialog-head{display:flex;align-items:center;justify-content:space-between}dialog h2{font-size:21px;margin:0}dialog p,dialog li{color:#7a879b;font-size:13px;line-height:1.9}dialog ul{padding-left:20px}dialog li{margin-bottom:9px}dialog .primary{margin-top:8px}
+body.dark{color-scheme:dark;--bg:#131923;--card:#1c2431;--soft:#171f2b;--text:#dce3ef;--muted:#8a98af;--border:#2c3749;--accent:#7e99ff;--add:#1a362d;--del:#3d252e;--add-strong:#2e604d;--del-strong:#763e50;--shadow:none;background:var(--bg);color:var(--text)}body.dark .button.primary{color:#14203d}body.dark .stat-modify,body.dark .notice{background:#3b3222;color:#e1ba72}body.dark .side-badge{background:#293555;color:#a2b5ff}body.dark .right-badge{background:#1e3c34;color:#89c5ac}body.dark .empty-icon span{background:#27334b;border-color:#35445f}body.dark .empty-icon span:last-child{background:#244235;border-color:#2f5245}body.dark .editor.drag .drop-hint{background:#1c284bef}
+@media(min-width:1700px){textarea{height:285px}.diff-scroll{max-height:650px}}@media(max-width:1050px){.topbar{padding:0 24px}.version{display:none}main{padding:26px 24px 0}.editor-head{flex-wrap:wrap}.file-name{max-width:110px}.option-checks{gap:14px}.toolbar{padding:13px}.remember{width:100%}}@media(max-width:650px){.topbar{height:73px;padding:0 15px}.brand h1{font-size:17px}.brand-icon{width:37px;height:37px}.privacy{display:none}.top-actions{gap:5px}main{padding:23px 12px 0}.intro h2{font-size:22px}.eyebrow{font-size:8px}.intro p{font-size:11px}.intro .button{padding:7px;font-size:10px}.editors{grid-template-columns:1fr}.editor:first-child{border-right:0;border-bottom:1px solid var(--border)}textarea{height:170px}.toolbar-left,.toolbar-right{gap:6px;flex-wrap:wrap}.toolbar-right{width:100%;justify-content:space-between}.button{padding:8px 10px}.options{padding:13px}.options-label{display:none}.option-checks{gap:13px}.result-toolbar{padding:12px}.result-title{gap:7px}.result-title #summary{font-size:10px}.line-number{flex-basis:29px;padding-right:5px}.line-code{padding:0 6px}.diff-row{font-size:11px}.stat{margin-right:4px;padding:4px}.result-meta{padding:0 12px 12px}footer{flex-direction:column;gap:8px}.empty{padding:35px 15px}}
+.pager{display:flex;justify-content:center;align-items:center;gap:20px;padding:13px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-icon" aria-hidden="true">≠</span><div><h1>Text Compare</h1><p>离线文本对比</p></div><span class="version">LOCAL EDITION</span></div>
+  <div class="top-actions"><span class="privacy"><i></i> 纯本地处理 · 无网络请求</span><button id="theme" class="icon-button" title="切换明暗主题" aria-label="切换明暗主题">◐</button><button id="help" class="icon-button" title="使用帮助" aria-label="使用帮助">?</button></div>
+</header>
+<main>
+  <section class="intro"><div><span class="eyebrow">YOUR WORDS, SIDE BY SIDE</span><h2>每一处变化，都清晰可见<span>。</span></h2><p>粘贴或拖入两个文本，立即找到不同。</p></div><button id="example" class="button subtle">试试示例 <span aria-hidden="true">↗</span></button></section>
+  <section class="workspace" aria-label="文本对比工作区">
+    <div class="toolbar"><div class="toolbar-left"><button id="compare" class="button primary">开始对比 <kbd>Ctrl ↵</kbd></button><button id="swap" class="button">⇄ 交换两侧</button><button id="clear" class="button">清空</button></div><div class="toolbar-right"><label class="toggle"><input id="auto" type="checkbox" checked><span>实时对比</span></label><button id="edit-toggle" class="button">收起输入区</button><button id="export" class="button" disabled>↓ 导出报告</button></div></div>
+    <div class="editors" id="editors">
+      <section class="editor" data-side="left"><div class="editor-head"><div class="editor-label"><span class="side-badge">A</span><strong>原始文本</strong><span class="file-name" id="left-name">未导入文件</span></div><div class="editor-actions"><button class="text-button" data-format="left" title="格式化当前侧 JSON">格式化 JSON</button><button class="button small" data-import="left">导入文件</button></div></div><div class="input-wrap"><textarea id="left" aria-label="原始文本" spellcheck="false" placeholder="在这里粘贴原始文本…&#10;&#10;也可以将文本文件拖到此处"></textarea><span class="drop-hint">释放以导入原始文本</span></div><div class="editor-foot"><span id="left-count">0 字符 · 0 行</span><div><label for="left-encoding">导入编码</label> <select id="left-encoding"><option value="utf-8">UTF-8</option><option value="gb18030">GB18030 / GBK</option><option value="utf-16le">UTF-16 LE</option><option value="utf-16be">UTF-16 BE</option></select></div></div><input type="file" id="left-file" hidden></section>
+      <section class="editor" data-side="right"><div class="editor-head"><div class="editor-label"><span class="side-badge right-badge">B</span><strong>修改后文本</strong><span class="file-name" id="right-name">未导入文件</span></div><div class="editor-actions"><button class="text-button" data-format="right" title="格式化当前侧 JSON">格式化 JSON</button><button class="button small" data-import="right">导入文件</button></div></div><div class="input-wrap"><textarea id="right" aria-label="修改后文本" spellcheck="false" placeholder="在这里粘贴修改后的文本…&#10;&#10;支持代码、提示词、配置和普通文本"></textarea><span class="drop-hint">释放以导入修改后文本</span></div><div class="editor-foot"><span id="right-count">0 字符 · 0 行</span><div><label for="right-encoding">导入编码</label> <select id="right-encoding"><option value="utf-8">UTF-8</option><option value="gb18030">GB18030 / GBK</option><option value="utf-16le">UTF-16 LE</option><option value="utf-16be">UTF-16 BE</option></select></div></div><input type="file" id="right-file" hidden></section>
+    </div>
+    <div class="options"><div class="option-checks"><span class="options-label">对比选项</span><label><input id="ignore-space" type="checkbox">忽略所有空白</label><label><input id="ignore-case" type="checkbox">忽略大小写</label><label><input id="only-changes" type="checkbox">只看差异</label><label><input id="wrap" type="checkbox" checked>自动换行</label></div><label class="remember"><input id="remember" type="checkbox">在此浏览器保留文本</label></div>
+  </section>
+  <section class="results" aria-label="对比结果"><div class="result-toolbar"><div class="result-title"><h3>对比结果</h3><span id="summary" role="status" aria-live="polite">等待输入</span><span id="stale" hidden>文本已变更，待重新对比</span></div><div class="navigation"><span id="position">0 / 0</span><button id="prev" class="icon-button" aria-label="上一处差异" title="上一处差异 (Alt+↑)" disabled>↑</button><button id="next" class="icon-button" aria-label="下一处差异" title="下一处差异 (Alt+↓)" disabled>↓</button></div></div>
+    <div class="result-meta" id="result-meta" hidden><div><span class="stat stat-modify" id="modified">0 行修改</span><span class="stat stat-insert" id="added">0 行新增</span><span class="stat stat-delete" id="removed">0 行删除</span></div><span id="timing"></span></div>
+    <div id="coarse" class="notice" hidden>两侧差异较多，已使用整段对齐以保持响应速度；文本完整保留，行内高亮仅供辅助。</div>
+    <div class="diff-titles" id="diff-titles" hidden><span>A <b id="result-left-name">原始文本</b></span><span>B <b id="result-right-name">修改后文本</b></span></div>
+    <div id="diff-scroll" class="diff-scroll" tabindex="0" aria-label="差异内容，可滚动"><div id="diff-content"></div></div>
+    <div id="empty" class="empty"><div class="empty-icon" aria-hidden="true"><span>−</span><span>+</span></div><h3>从两段文本开始</h3><p>差异会在这里并排显示，精确到每一个字符。</p><div class="legend"><span><i class="dot red"></i>删除</span><span><i class="dot green"></i>新增</span><span><i class="dot amber"></i>修改</span></div></div>
+    <div id="pager" class="pager" hidden><button id="previous-page" class="button">← 上一页</button><span id="page-range"></span><button id="more" class="button">下一页 →</button></div>
+  </section>
+  <footer><span>文本始终留在你的设备上。</span><span>Ctrl + Enter 对比 <i>·</i> Alt + ↑ / ↓ 跳转差异</span></footer>
+</main>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<dialog id="help-dialog"><div class="dialog-head"><h2>让对比更顺手</h2><button id="close-help" class="icon-button" aria-label="关闭帮助">×</button></div><p>双击 index.html 或启动脚本即可打开，无需安装、账号或网络。</p><ul><li>粘贴文本，或将文件拖入 A / B 任一输入区。导入上限为每侧 5 MB，文本上限为每侧 200 万字符、10 万行。</li><li>乱码时先选择正确编码，再重新导入。支持 UTF-8、GBK / GB18030 和 UTF-16；不支持 PDF、Word、Excel 等二进制文档。</li><li>默认实时对比。关闭后使用“开始对比”或 Ctrl + Enter。差异导航支持 Alt + ↑ / ↓，输入区内不会拦截光标快捷键。</li><li>忽略所有空白会忽略行内空格和制表符；空白行、行的顺序和末尾换行仍参与比较。CRLF / LF 统一处理。</li><li>勾选“在此浏览器保留文本”后，文本存入本地浏览器；取消勾选或清空时立即删除。默认不保存文本，其他人使用同一浏览器可能看到已保留文本。</li><li>导出的是独立 HTML 对比报告，可离线打开。大量内容分批显示，差异跳转会自动加载对应行。</li></ul><button id="close-help-bottom" class="button primary">开始使用</button></dialog>
+<script id="diff-engine" type="text/plain">/* Shared by the offline Web Worker and Node regression tests. No dependencies. */
+(function (root) {
+  'use strict';
+  function sequenceDiff(a, b, budget = 3000000) {
+    let head = 0, tail = 0;
+    while (head < a.length && head < b.length && a[head] === b[head]) head++;
+    while (tail < a.length - head && tail < b.length - head && a[a.length - 1 - tail] === b[b.length - 1 - tail]) tail++;
+    const left = a.slice(head, a.length - tail), right = b.slice(head, b.length - tail);
+    const before = a.slice(0, head).map(value => ({ type: 'equal', value }));
+    const after = a.slice(a.length - tail).map(value => ({ type: 'equal', value }));
+    if (!left.length || !right.length) return { ops: before.concat(left.map(value => ({ type: 'delete', value })), right.map(value => ({ type: 'insert', value })), after), coarse: false };
+    const n = left.length, m = right.length, trace = [];
+    let v = new Map([[1, 0]]), work = 0;
+    for (let d = 0; d <= n + m; d++) {
+      if ((work += 2 * d + 1) > budget || d > 1400) break;
+      trace.push(new Map(v));
+      for (let k = -d; k <= d; k += 2) {
+        const down = k === -d || (k !== d && (v.get(k - 1) ?? -Infinity) < (v.get(k + 1) ?? -Infinity));
+        let x = down ? (v.get(k + 1) ?? 0) : (v.get(k - 1) ?? 0) + 1;
+        let y = x - k;
+        while (x < n && y < m && left[x] === right[y]) { x++; y++; }
+        v.set(k, x);
+        if (x >= n && y >= m) {
+          const reversed = [];
+          for (let depth = d; depth >= 0; depth--) {
+            const previous = trace[depth], diagonal = x - y;
+            const prevK = diagonal === -depth || (diagonal !== depth && (previous.get(diagonal - 1) ?? -Infinity) < (previous.get(diagonal + 1) ?? -Infinity)) ? diagonal + 1 : diagonal - 1;
+            const prevX = previous.get(prevK) ?? 0, prevY = prevX - prevK;
+            while (x > prevX && y > prevY) { reversed.push({ type: 'equal', value: left[x - 1] }); x--; y--; }
+            if (!depth) break;
+            if (x === prevX) { reversed.push({ type: 'insert', value: right[y - 1] }); y--; }
+            else { reversed.push({ type: 'delete', value: left[x - 1] }); x--; }
+          }
+          return { ops: before.concat(reversed.reverse(), after), coarse: false };
+        }
+      }
+    }
+    // Bounded fallback: retain every input line and clearly report the coarser alignment.
+    return { ops: before.concat(left.map(value => ({ type: 'delete', value })), right.map(value => ({ type: 'insert', value })), after), coarse: true };
+  }
+  function lines(text) { return text === '' ? [] : text.replace(/\r\n?/g, '\n').split('\n'); }
+  function compare(leftText, rightText, options = {}) {
+    const left = lines(leftText), right = lines(rightText);
+    const normalize = line => {
+      if (options.whitespace) line = line.replace(/\s+/gu, '');
+      if (options.case) line = line.toLowerCase();
+      return line;
+    };
+    const a = left.map(normalize), b = right.map(normalize);
+    const result = sequenceDiff(a, b);
+    const rows = [], groups = [];
+    let li = 0, ri = 0, added = 0, removed = 0, modified = 0;
+    for (let i = 0; i < result.ops.length;) {
+      if (result.ops[i].type === 'equal') {
+        rows.push({ type: 'equal', left: left[li], right: right[ri], ln: ++li, rn: ++ri, group: -1 }); i++;
+        continue;
+      }
+      const deletes = [], inserts = [], group = groups.length;
+      while (i < result.ops.length && result.ops[i].type !== 'equal') {
+        if (result.ops[i++].type === 'delete') deletes.push({ text: left[li], num: ++li });
+        else inserts.push({ text: right[ri], num: ++ri });
+      }
+      groups.push(rows.length);
+      for (let j = 0; j < Math.max(deletes.length, inserts.length); j++) {
+        const l = deletes[j], r = inserts[j], type = l && r ? 'modify' : l ? 'delete' : 'insert';
+        if (type === 'modify') modified++; else if (l) removed++; else added++;
+        rows.push({ type, left: l?.text ?? null, right: r?.text ?? null, ln: l?.num ?? null, rn: r?.num ?? null, group });
+      }
+    }
+    return { rows, groups, added, removed, modified, coarse: result.coarse, leftLines: left.length, rightLines: right.length };
+  }
+  function inline(left, right, options = {}) {
+    // Array.from preserves Unicode code points, including emoji surrogate pairs.
+    if (left.length + right.length > 5000) return [[{ text: left, changed: true }], [{ text: right, changed: true }]];
+    const original = [Array.from(left), Array.from(right)];
+    const tokens = original.map(chars => chars.map((value, index) => ({ value, index })).filter(token => !options.whitespace || !/\s/u.test(token.value)));
+    const [a, b] = tokens.map(list => list.map(token => token.value));
+    const normalize = c => options.case ? c.toLowerCase() : c;
+    const result = sequenceDiff(a.map(normalize), b.map(normalize), 40000);
+    const parts = [[], []], changed = [new Set(), new Set()]; let li = 0, ri = 0;
+    function add(side, text, changed) {
+      const last = parts[side][parts[side].length - 1];
+      if (last && last.changed === changed) last.text += text;
+      else parts[side].push({ text, changed });
+    }
+    for (const op of result.ops) {
+      if (op.type !== 'insert') { if (op.type !== 'equal') changed[0].add(tokens[0][li].index); li++; }
+      if (op.type !== 'delete') { if (op.type !== 'equal') changed[1].add(tokens[1][ri].index); ri++; }
+    }
+    original.forEach((chars, side) => chars.forEach((char, index) => add(side, char, changed[side].has(index))));
+    return parts;
+  }
+  const api = { compare, inline, sequenceDiff };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.TextDiff = api;
+})(typeof self === 'undefined' ? globalThis : self);
+</script>
+<script>(function () {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const desktop = window.textCompareDesktop;
+  const sides = ['left', 'right'], MAX_CHARS = 2000000, MAX_FILE = 5 * 1024 * 1024, PAGE_SIZE = 400;
+  const engine = $('diff-engine').textContent;
+  const engineTag = document.createElement('script'); engineTag.textContent = engine; document.head.append(engineTag);
+  const workerUrl = URL.createObjectURL(new Blob([engine, '\nself.onmessage = e => { try { self.postMessage({result: TextDiff.compare(e.data.left, e.data.right, e.data.options)}); } catch(error) { self.postMessage({error: error.message}); } };'], { type: 'text/javascript' }));
+  let worker = null, revision = 0, timer, toastTimer, result = null, snapshot = null, currentGroup = -1, page = 0, visibleRows = [], stale = true;
+  const names = { left: '', right: '' }, importSequence = { left: 0, right: 0 };
+  function toast(message) { $('toast').textContent = message; $('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('toast').hidden = true; }, 4000); }
+  function getOptions() { return { whitespace: $('ignore-space').checked, case: $('ignore-case').checked }; }
+  function safeRead(key) { try { return localStorage.getItem(key); } catch { return null; } }
+  function removeSaved() { try { localStorage.removeItem('text-compare-content-v1'); } catch {} }
+  function saveContent() {
+    if (!$('remember').checked) return;
+    try { localStorage.setItem('text-compare-content-v1', JSON.stringify({ left: $('left').value, right: $('right').value, names })); }
+    catch { toast('浏览器存储空间不足，未能保留文本。请导出报告或自行备份。'); }
+  }
+  function updateCounts() {
+    for (const side of sides) {
+      const value = $(side).value, lineCount = value === '' ? 0 : value.split('\n').length;
+      $(side + '-count').textContent = value.length.toLocaleString() + ' 字符 · ' + lineCount.toLocaleString() + ' 行';
+      $(side + '-name').textContent = names[side] || '未导入文件'; $(side + '-name').title = names[side];
+    }
+  }
+  function dirty(schedule = true) {
+    revision++; stale = true; clearTimeout(timer);
+    if (worker) { worker.terminate(); worker = null; }
+    $('compare').disabled = false; $('compare').firstChild.textContent = '开始对比 ';
+    $('stale').hidden = !result; $('export').disabled = true;
+    $('prev').disabled = true; $('next').disabled = true;
+    updateCounts(); saveContent();
+    if ($('auto').checked && schedule) timer = setTimeout(compare, 350);
+  }
+  function compare() {
+    clearTimeout(timer);
+    if (sides.some(side => $(side).value.length > MAX_CHARS || $(side).value.split('\n').length > 100000)) { toast('每侧最多支持 200 万字符、10 万行，请缩小文本后重试。'); return; }
+    if (worker) worker.terminate();
+    const token = ++revision, started = performance.now();
+    const data = { left: $('left').value, right: $('right').value, options: getOptions(), names: { ...names } };
+    $('summary').textContent = '正在计算差异…'; $('compare').disabled = true; $('compare').firstChild.textContent = '正在对比 ';
+    const activeWorker = new Worker(workerUrl); worker = activeWorker;
+    const failed = message => {
+      if (token !== revision) return;
+      activeWorker.terminate(); worker = null; $('compare').disabled = false; $('compare').firstChild.textContent = '开始对比 ';
+      $('summary').textContent = '对比未完成'; toast(message);
+    };
+    activeWorker.onerror = () => failed('浏览器未能运行本地计算，请用新版 Edge 或 Chrome 打开。');
+    activeWorker.onmessage = event => {
+      if (token !== revision) return;
+      if (event.data.error) { failed('对比失败：' + event.data.error); return; }
+      activeWorker.terminate(); worker = null;
+      result = event.data.result; snapshot = data; stale = false; currentGroup = -1; page = 0;
+      $('compare').disabled = false; $('compare').firstChild.textContent = '开始对比 ';
+      $('stale').hidden = true; $('export').disabled = !data.left && !data.right;
+      $('summary').textContent = result.groups.length ? result.groups.length + ' 处差异' : (!data.left && !data.right ? '等待输入' : '文本一致' + ((data.options.whitespace || data.options.case) ? '（按当前忽略规则）' : ''));
+      $('modified').textContent = result.modified + ' 行修改'; $('added').textContent = result.added + ' 行新增'; $('removed').textContent = result.removed + ' 行删除';
+      $('timing').textContent = Math.round(performance.now() - started) + ' ms · ' + result.leftLines.toLocaleString() + ' / ' + result.rightLines.toLocaleString() + ' 行';
+      const hasText = Boolean(data.left || data.right);
+      $('result-meta').hidden = !hasText; $('diff-titles').hidden = !hasText; $('coarse').hidden = !result.coarse;
+      $('result-left-name').textContent = data.names.left || '原始文本'; $('result-right-name').textContent = data.names.right || '修改后文本';
+      buildView();
+    };
+    activeWorker.postMessage(data);
+  }
+  function buildView() {
+    if (!result) return;
+    visibleRows = result.rows.filter(row => !$('only-changes').checked || row.type !== 'equal');
+    page = Math.min(page, Math.max(0, Math.ceil(visibleRows.length / PAGE_SIZE) - 1));
+    renderPage(); updateNavigation();
+  }
+  function cell(row, side, parts) {
+    const value = row[side], number = row[side === 'left' ? 'ln' : 'rn'];
+    const el = document.createElement('div'); el.className = 'diff-cell';
+    if (value === null) el.classList.add('absent');
+    else if (row.type !== 'equal') el.classList.add(side === 'left' ? 'deleted' : 'inserted');
+    const num = document.createElement('span'); num.className = 'line-number'; num.textContent = number ?? ''; num.setAttribute('aria-hidden', 'true');
+    const code = document.createElement('pre'); code.className = 'line-code';
+    if (parts) {
+      for (const part of parts) { const span = document.createElement(part.changed ? 'mark' : 'span'); span.textContent = part.text; code.append(span); }
+    } else code.textContent = value ?? '';
+    el.append(num, code); return el;
+  }
+  function renderPage() {
+    const content = $('diff-content'); content.replaceChildren();
+    const fragment = document.createDocumentFragment(), start = page * PAGE_SIZE;
+    for (const row of visibleRows.slice(start, start + PAGE_SIZE)) {
+      const line = document.createElement('div'); line.className = 'diff-row' + (row.group === currentGroup && currentGroup >= 0 ? ' selected' : '');
+      if (row.group >= 0) line.dataset.group = row.group;
+      const parts = row.type === 'modify' ? TextDiff.inline(row.left, row.right, snapshot.options) : null;
+      line.append(cell(row, 'left', parts?.[0]), cell(row, 'right', parts?.[1])); fragment.append(line);
+    }
+    content.append(fragment); $('empty').hidden = Boolean(snapshot && (snapshot.left || snapshot.right));
+    $('pager').hidden = visibleRows.length <= PAGE_SIZE;
+    $('previous-page').disabled = page === 0; $('more').disabled = (page + 1) * PAGE_SIZE >= visibleRows.length;
+    $('page-range').textContent = (start + 1).toLocaleString() + '–' + Math.min(start + PAGE_SIZE, visibleRows.length).toLocaleString() + ' / ' + visibleRows.length.toLocaleString() + ' 行';
+    if (snapshot && (snapshot.left || snapshot.right) && !visibleRows.length) {
+      const message = document.createElement('div'); message.className = 'empty'; message.textContent = '当前规则下没有差异。取消“只看差异”可查看全部文本。'; content.append(message);
+    }
+    $('diff-scroll').scrollTop = 0;
+  }
+  function updateNavigation() {
+    const count = result?.groups.length || 0;
+    $('position').textContent = (currentGroup < 0 ? 0 : currentGroup + 1) + ' / ' + count;
+    $('prev').disabled = !count || stale; $('next').disabled = !count || stale;
+  }
+  function navigate(direction) {
+    if (!result?.groups.length || stale) return;
+    currentGroup = currentGroup < 0 ? (direction > 0 ? 0 : result.groups.length - 1) : (currentGroup + direction + result.groups.length) % result.groups.length;
+    const index = visibleRows.findIndex(row => row.group === currentGroup);
+    page = Math.floor(index / PAGE_SIZE); renderPage(); updateNavigation();
+    const selected = $('diff-content').querySelector('[data-group="' + currentGroup + '"]');
+    if (selected) { $('diff-scroll').scrollTop = Math.max(0, selected.offsetTop - $('diff-content').offsetTop - 36); selected.scrollIntoView({ block: 'nearest' }); }
+  }
+  async function importFile(side, file) {
+    if (!file) return;
+    if (file.size > MAX_FILE) { toast('文件不能超过 5 MB。'); return; }
+    const token = ++importSequence[side];
+    try {
+      const bytes = new Uint8Array(await file.arrayBuffer()); if (token !== importSequence[side]) return;
+      const encoding = $(side + '-encoding').value;
+      const utf16Bom = (bytes[0] === 255 && bytes[1] === 254) || (bytes[0] === 254 && bytes[1] === 255);
+      const binaryMagic = (bytes[0] === 80 && bytes[1] === 75 && bytes[2] === 3 && bytes[3] === 4) || (bytes[0] === 37 && bytes[1] === 80 && bytes[2] === 68 && bytes[3] === 70);
+      if (binaryMagic || (!utf16Bom && !encoding.startsWith('utf-16') && bytes.slice(0, 4096).includes(0))) { toast('请选择纯文本文件；不支持 PDF、Word、Excel 等二进制文档。'); return; }
+      const resolved = utf16Bom ? (bytes[0] === 255 ? 'utf-16le' : 'utf-16be') : encoding;
+      const text = new TextDecoder(resolved).decode(bytes);
+      if (text.length > MAX_CHARS) { toast('文本超过 200 万字符，请缩小后重试。'); return; }
+      $(side).value = text; names[side] = file.name; dirty();
+      toast('已导入 ' + file.name + (text.includes('\uFFFD') ? '；检测到替换字符，如有乱码请更换编码后重新导入。' : ''));
+    } catch { toast('读取文件失败，请检查文件权限或编码。'); }
+  }
+  async function chooseFile(side) {
+    if (!desktop?.openFile) { $(side + '-file').click(); return; }
+    const token = ++importSequence[side];
+    try {
+      const selected = await desktop.openFile();
+      if (selected.canceled || token !== importSequence[side]) return;
+      const bytes = Uint8Array.from(atob(selected.base64), char => char.charCodeAt(0));
+      await importFile(side, new File([bytes], selected.filename));
+    } catch (error) { toast(error.message || '文件导入失败，请重试。'); }
+  }
+  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+  async function exportReport() {
+    if (!result || stale || !snapshot) return;
+    const rows = result.rows.map(row => '<tr class="' + row.type + '"><td class="num">' + (row.ln ?? '') + '</td><td class="l">' + escapeHtml(row.left) + '</td><td class="num">' + (row.rn ?? '') + '</td><td class="r">' + escapeHtml(row.right) + '</td></tr>').join('');
+    const rules = [snapshot.options.whitespace && '忽略所有空白', snapshot.options.case && '忽略大小写'].filter(Boolean).join('、') || '无';
+    const report = '<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; base-uri \'none\'"><title>文本对比报告</title><style>body{font:14px system-ui,sans-serif;color:#263046;margin:30px}h1{font-size:24px}p{color:#6c778c;font-size:12px}table{width:100%;table-layout:fixed;border-collapse:collapse;font:12px/1.8 Consolas,monospace}td,th{border:1px solid #e3e8ef;padding:3px 10px;vertical-align:top;white-space:pre-wrap;overflow-wrap:anywhere}th{background:#f3f5fa;text-align:left}.num{width:45px;color:#98a2b3;text-align:right}.delete .l,.modify .l{background:#fff0f1}.insert .r,.modify .r{background:#edf9f1}@media print{body{margin:5mm}thead{display:table-header-group}tr{break-inside:avoid}}</style><h1>文本对比报告</h1><p>' + escapeHtml(new Date().toLocaleString('zh-CN')) + ' · ' + result.groups.length + ' 处差异 · ' + result.modified + ' 行修改 / ' + result.added + ' 行新增 / ' + result.removed + ' 行删除</p><p>忽略规则：' + escapeHtml(rules) + '。CRLF / LF 统一处理。' + (result.coarse ? '差异较多，使用整段对齐。' : '') + '</p><table><colgroup><col style="width:45px"><col><col style="width:45px"><col></colgroup><thead><tr><th></th><th>' + escapeHtml(snapshot.names.left || '原始文本') + '</th><th></th><th>' + escapeHtml(snapshot.names.right || '修改后文本') + '</th></tr></thead><tbody>' + rows + '</tbody></table></html>';
+    const filename = '文本对比报告-' + new Date().toISOString().slice(0, 10) + '.html';
+    if (desktop) {
+      try { const saved = await desktop.saveReport(report, filename); if (!saved.canceled) toast('对比报告已保存。'); }
+      catch { toast('报告保存失败，请检查文件夹权限后重试。'); }
+      return;
+    }
+    const url = URL.createObjectURL(new Blob([report], { type: 'text/html;charset=utf-8' }));
+    const anchor = document.createElement('a'); anchor.href = url; anchor.download = filename; document.body.append(anchor); anchor.click(); anchor.remove(); setTimeout(() => URL.revokeObjectURL(url), 10000); toast('已生成报告，请查看浏览器下载。');
+  }
+  for (const side of sides) {
+    $(side).addEventListener('input', () => { importSequence[side]++; dirty(); });
+    $(side + '-file').addEventListener('change', event => { importFile(side, event.target.files[0]); event.target.value = ''; });
+    const editor = document.querySelector('[data-side="' + side + '"]');
+    editor.addEventListener('dragover', event => { event.preventDefault(); editor.classList.add('drag'); });
+    editor.addEventListener('dragleave', event => { if (!editor.contains(event.relatedTarget)) editor.classList.remove('drag'); });
+    editor.addEventListener('drop', event => { event.preventDefault(); editor.classList.remove('drag'); importFile(side, event.dataTransfer.files[0]); });
+  }
+  document.addEventListener('dragover', event => event.preventDefault()); document.addEventListener('drop', event => event.preventDefault());
+  document.querySelectorAll('[data-import]').forEach(button => button.addEventListener('click', () => chooseFile(button.dataset.import)));
+  document.querySelectorAll('[data-format]').forEach(button => button.addEventListener('click', () => {
+    const input = $(button.dataset.format);
+    try { input.value = JSON.stringify(JSON.parse(input.value), null, 2); dirty(); toast('JSON 已格式化；键顺序保持不变。'); } catch { toast('当前文本不是有效 JSON，未修改内容。'); }
+  }));
+  $('compare').addEventListener('click', compare);
+  $('swap').addEventListener('click', () => {
+    for (const side of sides) importSequence[side]++;
+    const temp = $('left').value; $('left').value = $('right').value; $('right').value = temp;
+    [names.left, names.right] = [names.right, names.left]; dirty();
+  });
+  $('clear').addEventListener('click', () => {
+    for (const side of sides) { $(side).value = ''; names[side] = ''; importSequence[side]++; }
+    $('remember').checked = false; removeSaved(); dirty(false); compare();
+  });
+  $('example').addEventListener('click', () => {
+    if (($('left').value || $('right').value) && !confirm('载入示例会替换当前两侧文本，是否继续？')) return;
+    $('left').value = '{\n  "name": "文本对比工具",\n  "version": "1.0.0",\n  "offline": true,\n  "theme": "light",\n  "features": ["文本对比", "文件导入"],\n  "note": "让每一处变化清晰可见"\n}';
+    $('right').value = '{\n  "name": "文本对比工具",\n  "version": "1.1.0",\n  "offline": true,\n  "theme": "dark",\n  "features": ["文本对比", "文件导入", "报告导出"],\n  "privacy": "数据仅在本地处理",\n  "note": "让每一处变化清晰可见"\n}';
+    names.left = 'config.before.json'; names.right = 'config.after.json';
+    for (const side of sides) importSequence[side]++;
+    dirty(); compare();
+  });
+  $('ignore-space').addEventListener('change', () => dirty()); $('ignore-case').addEventListener('change', () => dirty());
+  $('auto').addEventListener('change', () => { if ($('auto').checked && stale) compare(); else clearTimeout(timer); });
+  $('only-changes').addEventListener('change', () => { page = 0; buildView(); });
+  $('wrap').addEventListener('change', () => $('diff-content').classList.toggle('nowrap', !$('wrap').checked));
+  $('remember').addEventListener('change', () => { if ($('remember').checked) { saveContent(); toast('已在当前浏览器保留文本。'); } else { removeSaved(); toast('已删除本地保留的文本。'); } });
+  $('edit-toggle').addEventListener('click', () => { $('editors').hidden = !$('editors').hidden; $('edit-toggle').textContent = $('editors').hidden ? '展开输入区' : '收起输入区'; });
+  $('prev').addEventListener('click', () => navigate(-1)); $('next').addEventListener('click', () => navigate(1));
+  $('more').addEventListener('click', () => { page++; renderPage(); }); $('previous-page').addEventListener('click', () => { page--; renderPage(); });
+  $('export').addEventListener('click', exportReport);
+  $('theme').addEventListener('click', () => { document.body.classList.toggle('dark'); try { localStorage.setItem('text-compare-theme-v1', document.body.classList.contains('dark') ? 'dark' : 'light'); } catch {} });
+  $('help').addEventListener('click', () => $('help-dialog').showModal());
+  for (const id of ['close-help', 'close-help-bottom']) $(id).addEventListener('click', () => $('help-dialog').close());
+  document.addEventListener('keydown', event => {
+    if (desktop && !event.altKey && (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'o') {
+      event.preventDefault(); chooseFile(event.shiftKey ? 'right' : 'left'); return;
+    }
+    if (desktop && !event.altKey && (event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 's') {
+      event.preventDefault(); if (!$('export').disabled) exportReport(); else toast('请先完成文本对比，再导出报告。'); return;
+    }
+    if (desktop && event.key === 'F1') { event.preventDefault(); if (!$('help-dialog').open) $('help-dialog').showModal(); return; }
+    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') { event.preventDefault(); compare(); }
+    if (event.altKey && (event.key === 'ArrowDown' || event.key === 'ArrowUp') && !event.target.matches('textarea,input,select')) { event.preventDefault(); navigate(event.key === 'ArrowDown' ? 1 : -1); }
+  });
+  document.body.classList.toggle('dark', safeRead('text-compare-theme-v1') === 'dark');
+  const saved = safeRead('text-compare-content-v1');
+  if (saved) { try { const data = JSON.parse(saved); for (const side of sides) { $(side).value = typeof data[side] === 'string' ? data[side].slice(0, MAX_CHARS) : ''; names[side] = typeof data.names?.[side] === 'string' ? data.names[side] : ''; } $('remember').checked = true; updateCounts(); compare(); } catch { removeSaved(); } }
+  else updateCounts();
+  if (desktop) {
+    document.querySelector('.version').textContent = desktop.edition || 'DESKTOP EDITION';
+    document.querySelector('.remember').lastChild.textContent = '在此应用保留文本';
+    document.querySelector('#help-dialog > p').textContent = '双击 TextCompare.exe 即可打开，无需安装、账号或网络。';
+    document.querySelectorAll('#help-dialog li').forEach(item => { item.textContent = item.textContent.replace(/浏览器/g, '应用'); });
+    desktop.onAction(name => {
+      if (name === 'import-left' || name === 'import-right') chooseFile(name.replace('import-', ''));
+      else if (name === 'export') { if (!$('export').disabled) exportReport(); else toast('请先完成文本对比，再导出报告。'); }
+      else if (name === 'help' && !$('help-dialog').open) $('help-dialog').showModal();
+    });
+  }
+  window.addEventListener('pagehide', () => { worker?.terminate(); });
+})();
+</script>
+</body>
+</html>

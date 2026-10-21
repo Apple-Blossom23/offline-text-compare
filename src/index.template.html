@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' blob:; style-src 'unsafe-inline'; worker-src blob:; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Text Compare · 离线文本对比</title>
+<style>/* INLINE_STYLE */</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-icon" aria-hidden="true">≠</span><div><h1>Text Compare</h1><p>离线文本对比</p></div><span class="version">LOCAL EDITION</span></div>
+  <div class="top-actions"><span class="privacy"><i></i> 纯本地处理 · 无网络请求</span><button id="theme" class="icon-button" title="切换明暗主题" aria-label="切换明暗主题">◐</button><button id="help" class="icon-button" title="使用帮助" aria-label="使用帮助">?</button></div>
+</header>
+<main>
+  <section class="intro"><div><span class="eyebrow">YOUR WORDS, SIDE BY SIDE</span><h2>每一处变化，都清晰可见<span>。</span></h2><p>粘贴或拖入两个文本，立即找到不同。</p></div><button id="example" class="button subtle">试试示例 <span aria-hidden="true">↗</span></button></section>
+  <section class="workspace" aria-label="文本对比工作区">
+    <div class="toolbar"><div class="toolbar-left"><button id="compare" class="button primary">开始对比 <kbd>Ctrl ↵</kbd></button><button id="swap" class="button">⇄ 交换两侧</button><button id="clear" class="button">清空</button></div><div class="toolbar-right"><label class="toggle"><input id="auto" type="checkbox" checked><span>实时对比</span></label><button id="edit-toggle" class="button">收起输入区</button><button id="export" class="button" disabled>↓ 导出报告</button></div></div>
+    <div class="editors" id="editors">
+      <section class="editor" data-side="left"><div class="editor-head"><div class="editor-label"><span class="side-badge">A</span><strong>原始文本</strong><span class="file-name" id="left-name">未导入文件</span></div><div class="editor-actions"><button class="text-button" data-format="left" title="格式化当前侧 JSON">格式化 JSON</button><button class="button small" data-import="left">导入文件</button></div></div><div class="input-wrap"><textarea id="left" aria-label="原始文本" spellcheck="false" placeholder="在这里粘贴原始文本…&#10;&#10;也可以将文本文件拖到此处"></textarea><span class="drop-hint">释放以导入原始文本</span></div><div class="editor-foot"><span id="left-count">0 字符 · 0 行</span><div><label for="left-encoding">导入编码</label> <select id="left-encoding"><option value="utf-8">UTF-8</option><option value="gb18030">GB18030 / GBK</option><option value="utf-16le">UTF-16 LE</option><option value="utf-16be">UTF-16 BE</option></select></div></div><input type="file" id="left-file" hidden></section>
+      <section class="editor" data-side="right"><div class="editor-head"><div class="editor-label"><span class="side-badge right-badge">B</span><strong>修改后文本</strong><span class="file-name" id="right-name">未导入文件</span></div><div class="editor-actions"><button class="text-button" data-format="right" title="格式化当前侧 JSON">格式化 JSON</button><button class="button small" data-import="right">导入文件</button></div></div><div class="input-wrap"><textarea id="right" aria-label="修改后文本" spellcheck="false" placeholder="在这里粘贴修改后的文本…&#10;&#10;支持代码、提示词、配置和普通文本"></textarea><span class="drop-hint">释放以导入修改后文本</span></div><div class="editor-foot"><span id="right-count">0 字符 · 0 行</span><div><label for="right-encoding">导入编码</label> <select id="right-encoding"><option value="utf-8">UTF-8</option><option value="gb18030">GB18030 / GBK</option><option value="utf-16le">UTF-16 LE</option><option value="utf-16be">UTF-16 BE</option></select></div></div><input type="file" id="right-file" hidden></section>
+    </div>
+    <div class="options"><div class="option-checks"><span class="options-label">对比选项</span><label><input id="ignore-space" type="checkbox">忽略所有空白</label><label><input id="ignore-case" type="checkbox">忽略大小写</label><label><input id="only-changes" type="checkbox">只看差异</label><label><input id="wrap" type="checkbox" checked>自动换行</label></div><label class="remember"><input id="remember" type="checkbox">在此浏览器保留文本</label></div>
+  </section>
+  <section class="results" aria-label="对比结果"><div class="result-toolbar"><div class="result-title"><h3>对比结果</h3><span id="summary" role="status" aria-live="polite">等待输入</span><span id="stale" hidden>文本已变更，待重新对比</span></div><div class="navigation"><span id="position">0 / 0</span><button id="prev" class="icon-button" aria-label="上一处差异" title="上一处差异 (Alt+↑)" disabled>↑</button><button id="next" class="icon-button" aria-label="下一处差异" title="下一处差异 (Alt+↓)" disabled>↓</button></div></div>
+    <div class="result-meta" id="result-meta" hidden><div><span class="stat stat-modify" id="modified">0 行修改</span><span class="stat stat-insert" id="added">0 行新增</span><span class="stat stat-delete" id="removed">0 行删除</span></div><span id="timing"></span></div>
+    <div id="coarse" class="notice" hidden>两侧差异较多，已使用整段对齐以保持响应速度；文本完整保留，行内高亮仅供辅助。</div>
+    <div class="diff-titles" id="diff-titles" hidden><span>A <b id="result-left-name">原始文本</b></span><span>B <b id="result-right-name">修改后文本</b></span></div>
+    <div id="diff-scroll" class="diff-scroll" tabindex="0" aria-label="差异内容，可滚动"><div id="diff-content"></div></div>
+    <div id="empty" class="empty"><div class="empty-icon" aria-hidden="true"><span>−</span><span>+</span></div><h3>从两段文本开始</h3><p>差异会在这里并排显示，精确到每一个字符。</p><div class="legend"><span><i class="dot red"></i>删除</span><span><i class="dot green"></i>新增</span><span><i class="dot amber"></i>修改</span></div></div>
+    <div id="pager" class="pager" hidden><button id="previous-page" class="button">← 上一页</button><span id="page-range"></span><button id="more" class="button">下一页 →</button></div>
+  </section>
+  <footer><span>文本始终留在你的设备上。</span><span>Ctrl + Enter 对比 <i>·</i> Alt + ↑ / ↓ 跳转差异</span></footer>
+</main>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<dialog id="help-dialog"><div class="dialog-head"><h2>让对比更顺手</h2><button id="close-help" class="icon-button" aria-label="关闭帮助">×</button></div><p>双击 index.html 或启动脚本即可打开，无需安装、账号或网络。</p><ul><li>粘贴文本，或将文件拖入 A / B 任一输入区。导入上限为每侧 5 MB，文本上限为每侧 200 万字符、10 万行。</li><li>乱码时先选择正确编码，再重新导入。支持 UTF-8、GBK / GB18030 和 UTF-16；不支持 PDF、Word、Excel 等二进制文档。</li><li>默认实时对比。关闭后使用“开始对比”或 Ctrl + Enter。差异导航支持 Alt + ↑ / ↓，输入区内不会拦截光标快捷键。</li><li>忽略所有空白会忽略行内空格和制表符；空白行、行的顺序和末尾换行仍参与比较。CRLF / LF 统一处理。</li><li>勾选“在此浏览器保留文本”后，文本存入本地浏览器；取消勾选或清空时立即删除。默认不保存文本，其他人使用同一浏览器可能看到已保留文本。</li><li>导出的是独立 HTML 对比报告，可离线打开。大量内容分批显示，差异跳转会自动加载对应行。</li></ul><button id="close-help-bottom" class="button primary">开始使用</button></dialog>
+<script id="diff-engine" type="text/plain">/* INLINE_ENGINE */</script>
+<script>/* INLINE_APP */</script>
+</body>
+</html>

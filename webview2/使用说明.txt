@@ -1,0 +1,26 @@
+Text Compare 1.1.0 · WebView2 轻量桌面版
+
+完整解压后，双击 TextCompare.exe。请保留同一文件夹里的 DLL 和配置文件。
+程序复用系统已安装的 Microsoft Edge WebView2 Runtime，运行时无需服务器或网络。
+可双击“创建桌面快捷方式.vbs”创建桌面入口。
+
+系统要求：Windows 10 / 11 x64、.NET Framework 4.8、Microsoft Edge WebView2 Evergreen Runtime。
+本包只包含小型 SDK 接口库，不包含浏览器内核或 .NET 运行环境。
+缺少 WebView2 时会显示提示，不会自动下载安装。
+微软官方下载（只在缺少运行组件时需要）：
+https://developer.microsoft.com/microsoft-edge/webview2/
+https://dotnet.microsoft.com/download/dotnet-framework/net48
+需要在完全离线的新电脑部署时，请事先从微软准备上述组件的离线安装包。
+
+支持：左右文本对比、行内高亮、差异导航、粘贴/文件导入、编码选择、忽略规则、JSON 格式化、主题切换、HTML 报告导出。
+快捷键：Ctrl+Enter 对比；Ctrl+O 导入左侧；Ctrl+Shift+O 导入右侧；Ctrl+Shift+S 导出报告；F1 帮助。
+输入区外 Alt+↑ / ↓ 跳转差异。Ctrl++ / Ctrl+- / Ctrl+0 调整缩放。
+
+文本默认不保存。手动开启保留后，文本存在本机应用配置目录，不上传服务器。
+数据和设置目录：%LOCALAPPDATA%\TextCompareWebView2
+该目录与原 Electron 版本相互独立，不会自动导入旧版本的已保留文本。
+退出应用后可删除程序目录；如需清理已保留文本及设置，可在退出后自行删除上述数据目录。
+WebView2 的用户数据和缓存会额外占用磁盘，不计入本应用 ZIP 大小；共享运行时本身也占用系统磁盘。
+
+当前为未签名便携版，不需要管理员权限。应用不包含自动更新功能。
+Microsoft WebView2 SDK 许可见 WebView2-LICENSE.txt。
