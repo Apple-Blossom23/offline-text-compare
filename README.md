@@ -21,13 +21,6 @@
 | **便于审阅和分享** | 可只看差异、忽略空白或大小写，支持 JSON 格式化；导出独立 HTML 报告，可离线查看和打印。 |
 | **源码简洁** | C# + WinForms + 原生 HTML/CSS/JavaScript；前端、构建及 Node 测试没有 npm 包依赖。 |
 
-### 为什么体积这么小
-
-桌面外壳使用 Windows 的 .NET Framework 和 WinForms，界面由系统已有的 WebView2 Runtime 渲染。HTML、CSS 和 JavaScript 嵌入 EXE，仅额外携带必要的 WebView2 接口库和 Loader；不捆绑 Chromium、Electron 或 Node.js 运行环境。
-
-早期同项目的 Electron ZIP 约 **150.84 MiB**，当前 WebView2 版 ZIP 约 **0.3 MiB**，下载包缩小约 **99.8%**。这是本项目两种打包方式的比较，不是所有同类软件的统一数据。
-
-**小的是应用发行包。** 系统共享的 WebView2 / .NET 运行时，以及首次运行后生成的用户数据和缓存，会额外占用磁盘，未计入上述体积。新电脑若缺少组件，需要先安装。
 
 ## 下载与运行
 
